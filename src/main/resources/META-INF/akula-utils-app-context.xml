@@ -36,4 +36,6 @@
 		<property name="messageSource" ref="messageSource" />
 		<property name="akulaLocale" ref="akulaLocale" />
 	</bean>
+	
+	<bean id="akulaPropertyFile" class="br.com.akula.impl.config.AkulaPropertyFileImpl"/>
 </beans>
