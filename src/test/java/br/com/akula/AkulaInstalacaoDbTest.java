@@ -1,5 +1,12 @@
 package br.com.akula;
 
+import static org.junit.Assert.*;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -18,9 +25,17 @@ public class AkulaInstalacaoDbTest {
 	@Autowired
 	private InstalacaoDbService instalacaoDbService;
 	
+	@PersistenceContext
+	protected EntityManager em;
+	
 	@Test
+	@SuppressWarnings("rawtypes")
 	public void testInstalacaoDb() {
 		instalacaoDbService.instalarDb();
 		logger.debug("InstalacaoDb executado com sucesso");
+		
+		List list = em.createNativeQuery("select * from tb_users").getResultList();
+		
+		assertTrue(list.size() > 0);
 	}
 }
