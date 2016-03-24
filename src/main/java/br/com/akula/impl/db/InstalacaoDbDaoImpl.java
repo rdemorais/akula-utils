@@ -19,7 +19,7 @@ public class InstalacaoDbDaoImpl implements InstalacaoDbDao{
 	protected EntityManager em;
 	
 	@Override
-	public void executeSQLScript(Resource scriptResource) throws RuntimeException {
+	public void executeSQLScript(final Resource scriptResource) throws RuntimeException {
 		((Session)em.getDelegate()).doWork(new Work() {
 			@Override
 			public void execute(Connection connection) throws SQLException {
