@@ -33,4 +33,6 @@
 	<bean id="testAkulaInstalacaoDbEventHandler" class="br.com.akula.db.TestAkulaInstalacaoDbEventHandler">
 		<property name="order" value="1"/>
 	</bean>
+	
+	<bean id="emailSender" class="br.com.akula.mail.TestEmailSenderImpl"/>
 </beans>

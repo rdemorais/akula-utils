@@ -13,14 +13,15 @@
 
 	<context:spring-configured />
 	<context:annotation-config />
-	
-	<util:properties id="instalacaoProps" location="classpath:instalacao-db.properties"/>
-	
+
+	<util:properties id="instalacaoProps"
+		location="classpath:instalacao-db.properties" />
+
 	<bean id="messageSource"
 		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<property name="basename" value="classpath:locale/messages" />
 	</bean>
-	
+
 	<bean id="akulaLocale" class="br.com.akula.impl.msg.AkulaLocaleImpl">
 		<property name="localesSuportados">
 			<list>
@@ -36,17 +37,75 @@
 		</property>
 		<property name="localeSelecionado" value="pt_BR" />
 	</bean>
-	
-	<bean id="akulaMessage" class="br.com.akula.impl.msg.AkulaResourceBundleMessageSourceImpl">
+
+	<bean id="akulaMessage"
+		class="br.com.akula.impl.msg.AkulaResourceBundleMessageSourceImpl">
 		<property name="messageSource" ref="messageSource" />
 		<property name="akulaLocale" ref="akulaLocale" />
 	</bean>
-	
-	<bean id="akulaPropertyFile" class="br.com.akula.impl.config.AkulaPropertyFileImpl"/>
-	
-	<bean id="akulaFileSystem" class="br.com.akula.impl.file.AkulaFileSystemImpl"/>
-	
-	<bean id="instalacaoDbDao" class="br.com.akula.impl.db.InstalacaoDbDaoImpl"/>
-	<bean id="instalacaoDbService" class="br.com.akula.impl.db.InstalacaoDbServiceImpl"/>
-	<bean id="akulaInstalacaoDbPublisher" class="br.com.akula.impl.db.AkulaInstalacaoDbPublisherImpl"/>
+
+	<bean id="akulaPropertyFile" class="br.com.akula.impl.config.AkulaPropertyFileImpl" />
+
+	<bean id="akulaFileSystem" class="br.com.akula.impl.file.AkulaFileSystemImpl" />
+
+	<bean id="instalacaoDbDao" class="br.com.akula.impl.db.InstalacaoDbDaoImpl" />
+	<bean id="instalacaoDbService" class="br.com.akula.impl.db.InstalacaoDbServiceImpl" />
+	<bean id="akulaInstalacaoDbPublisher" class="br.com.akula.impl.db.AkulaInstalacaoDbPublisherImpl" />
+
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations" value="classpath:app.properties" />
+	</bean>
+
+	<!-- Configuração de envio de email -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="${akula.email.smtp.host}" />
+		<property name="port" value="${akula.email.port}" />
+		<property name="username" value="${akula.email.username}" />
+		<property name="password" value="${akula.email.password}" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.smtps.debug">false</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- THYMELEAF: Template Resolver for email templates -->
+	<bean id="emailTemplateResolver"
+		class="org.thymeleaf.templateresolver.ClassLoaderTemplateResolver">
+		<property name="prefix" value="mail/" />
+		<property name="templateMode" value="HTML5" />
+		<property name="characterEncoding" value="UTF-8" />
+		<property name="order" value="1" />
+	</bean>
+
+	<!-- THYMELEAF: Template Resolver for webapp pages -->
+	<!-- (we would not need this if our app was not web) -->
+	<bean id="webTemplateResolver"
+		class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+		<property name="prefix" value="/WEB-INF/templates/" />
+		<property name="templateMode" value="HTML5" />
+		<property name="characterEncoding" value="UTF-8" />
+		<property name="order" value="2" />
+	</bean>
+
+	<!-- THYMELEAF: Template Engine (Spring4-specific version) -->
+	<bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
+		<property name="templateResolvers">
+			<set>
+				<ref bean="emailTemplateResolver" />
+				<ref bean="webTemplateResolver" />
+			</set>
+		</property>
+	</bean>
+
+	<!-- THYMELEAF: View Resolver - implementation of Spring's ViewResolver 
+		interface -->
+	<!-- (we would not need this if our app was not web) -->
+	<bean id="viewResolver" class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
+		<property name="templateEngine" ref="templateEngine" />
+		<property name="characterEncoding" value="UTF-8" />
+	</bean>
 </beans>
