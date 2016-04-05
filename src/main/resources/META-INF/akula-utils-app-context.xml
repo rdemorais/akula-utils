@@ -26,13 +26,11 @@
 		<property name="localesSuportados">
 			<list>
 				<value>pt_BR</value>
-				<value>en_US</value>
 			</list>
 		</property>
 		<property name="localesNomeAmigavel">
 			<list>
 				<value>Português Brasil(pt_BR)</value>
-				<value>Inglês EUA(en_US)</value>
 			</list>
 		</property>
 		<property name="localeSelecionado" value="pt_BR" />
