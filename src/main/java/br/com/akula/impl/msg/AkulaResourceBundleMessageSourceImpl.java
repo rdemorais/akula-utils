@@ -16,6 +16,15 @@ public class AkulaResourceBundleMessageSourceImpl implements AkulaResourceBundle
 			return "Unresolved key: " + key;
 		}
 	}
+	
+	@Override
+	public String getMessage(String key, Object[] args) {
+		try {
+			return messageSource.getMessage(key, args, akulaLocale.localeSelecionado());
+		} catch (Exception e) {
+			return "Unresolved key: " + key;
+		}
+	}
 
 	public void setMessageSource(MessageSource messageSource) {
 		this.messageSource = messageSource;
